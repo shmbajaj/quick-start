@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { DotsHorizontalIcon } from '@radix-ui/react-icons';
-import { Row } from '@tanstack/react-table';
+import { DotsHorizontalIcon } from "@radix-ui/react-icons";
+import { Row } from "@tanstack/react-table";
 
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,10 +11,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import SaveNewMeeting from '../save-new-meeting';
-import { useState } from 'react';
-import MeetingForm from '../meetings-form';
+} from "@/components/ui/dropdown-menu";
+import SaveNewRecord from "../save-new-record";
+import { useState } from "react";
+import RecordForm from "../record-form";
+import { meetingFormSchema, paymentFormSchema } from "@/data/form.schema";
+import { meetingFormFields, paymentFormFields } from "@/data/data";
+import { useLocation } from "react-router-dom";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -25,6 +28,9 @@ export function DataTableRowActions<TData>({
 }: DataTableRowActionsProps<TData>) {
   const [open, setIsOpen] = useState(false);
   const [showViewDialog, setShowViewDialog] = useState(false);
+  const location = useLocation();
+  const filterKey = location.pathname === "/payments" ? "clientName" : "title";
+
   return (
     <>
       <DropdownMenu>
@@ -59,22 +65,44 @@ export function DataTableRowActions<TData>({
       </DropdownMenu>
       {/* TODO: fix type assertion as `any` */}
       {/* TODO: use data[dot]ts file for hard-coded strings  */}
-      <SaveNewMeeting
+      <SaveNewRecord
         open={open}
         onOpenChange={setIsOpen}
-        title="Edit Meeting"
-        description="This will edit the details of the meeting message as a preset, which you can access later or share with others."
+        title={`Edit ${filterKey === "title" ? "Meeting" : "Payment"}`}
+        description={`This will edit the details of the ${
+          filterKey === "title" ? "Meeting" : "Payment"
+        } message as a preset, which you can access later or share with others.`}
       >
-        <MeetingForm values={row.original as any} />
-      </SaveNewMeeting>
-      <SaveNewMeeting
+        <RecordForm
+          values={row.original as any}
+          formFields={
+            filterKey === "title" ? meetingFormFields : paymentFormFields
+          }
+          formSchema={
+            filterKey === "title" ? meetingFormSchema : paymentFormSchema
+          }
+          submitButtonText="Save"
+        />
+      </SaveNewRecord>
+      <SaveNewRecord
         open={showViewDialog}
         onOpenChange={setShowViewDialog}
-        title="View Meeting"
-        description="This will show the details of the meeting message as a preset, which you can access later or share with others."
+        title={`View ${filterKey === "title" ? "Meeting" : "Payment"}`}
+        description={`This will show the details of the ${
+          filterKey === "title" ? "Meeting" : "Payment"
+        } message as a preset, which you can access later or share with others.`}
       >
-        <MeetingForm values={row.original as any} isReadOnly />
-      </SaveNewMeeting>
+        <RecordForm
+          values={row.original as any}
+          formFields={
+            filterKey === "title" ? meetingFormFields : paymentFormFields
+          }
+          formSchema={
+            filterKey === "title" ? meetingFormSchema : paymentFormSchema
+          }
+          isReadOnly
+        />
+      </SaveNewRecord>
     </>
   );
 }

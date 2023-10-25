@@ -1,13 +1,13 @@
-import { meetingColumns as columns } from "@/data/columns";
-import { Meeting } from "@/data/schema";
+import { paymentColumns as columns } from "@/data/columns";
+import { Payment } from "@/data/schema";
 import Layout from "@/components/layout";
 import { useLoaderData, useNavigation } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
 
-const pageTitle = "Meetings!";
-const pageDescription = "Here's a list of your meetings!";
+const pageTitle = "Payments!";
+const pageDescription = "Here's a list of your payments!";
 
-export default function Meetings() {
+export default function Payments() {
   const navigation = useNavigation();
   const data = useLoaderData();
 
@@ -19,7 +19,7 @@ export default function Meetings() {
     <Layout
       pageTitle={pageTitle}
       pageDescription={pageDescription}
-      data={data as Array<Meeting>}
+      data={data as Array<Payment>}
       columns={columns}
     />
   );

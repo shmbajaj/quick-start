@@ -1,7 +1,7 @@
-import { statuses } from '@/data/data';
-import { Meeting, meetingSchema } from '@/data/schema';
-import { faker } from '@faker-js/faker';
-import { z } from 'zod';
+import { currencySymbols, statuses } from "@/data/data";
+import { Meeting, Payment, meetingSchema, paymentSchema } from "@/data/schema";
+import { faker } from "@faker-js/faker";
+import { z } from "zod";
 
 function getAttendes() {
   const limit = faker.number.int({ min: 1, max: 5 });
@@ -40,8 +40,38 @@ async function getMeetings(): Promise<Array<Meeting>> {
     attendes: getAttendes(),
     tasks: getTasks(),
   }));
-  console.log('✅ Meetings data generated.');
+  console.log("✅ Meetings data generated.");
   return z.array(meetingSchema).parse(data) as unknown as Array<Meeting>;
 }
 
-export { getMeetings };
+async function getPayments(): Promise<Array<Payment>> {
+  // TODO: fix hard
+  const data = Array.from({ length: 100 }, () => ({
+    id: `PAYMENT-${faker.number.int({ min: 1000, max: 9999 })}`,
+    clientName: faker.internet.domainWord(),
+    productName: faker.commerce.productName(),
+    poDate: faker.date.soon().toLocaleDateString(),
+    deliveryDate: faker.date.soon().toLocaleDateString(),
+    payment: faker.finance.amount({
+      autoFormat: false,
+      dec: 2,
+      min: 10000,
+      max: 100000,
+      symbol: "",
+    }),
+    recievedPayment: faker.finance.amount({
+      autoFormat: false,
+      dec: 2,
+      min: 5000,
+      max: 99000,
+      symbol: "",
+    }),
+    location: faker.location.streetAddress(),
+    currency: faker.helpers.arrayElement(currencySymbols),
+    status: faker.helpers.arrayElement(statuses).value,
+  }));
+  console.log("✅ Payments data generated.");
+  return z.array(paymentSchema).parse(data) as unknown as Array<Payment>;
+}
+
+export { getMeetings, getPayments };
