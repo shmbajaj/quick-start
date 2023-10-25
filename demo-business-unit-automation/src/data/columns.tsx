@@ -280,10 +280,10 @@ export const paymentColumns: ColumnDef<Payment>[] = [
             variant={"outline"}
             className={`${
               percentage <= 50
-                ? "bg-red-400"
+                ? "bg-red-300"
                 : percentage <= 90
-                ? "bg-sky-500"
-                : "bg-green-600"
+                ? "bg-sky-400"
+                : "bg-green-400"
             }`}
           >{`${percentage}%`}</Badge>
           <span className="max-w-[500px] truncate font-medium">
