@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import { Cross2Icon } from '@radix-ui/react-icons';
-import { Table } from '@tanstack/react-table';
+import { Cross2Icon } from "@radix-ui/react-icons";
+import { Table } from "@tanstack/react-table";
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { DataTableViewOptions } from '@/components/ui/data-table-view-options';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { DataTableViewOptions } from "@/components/ui/data-table-view-options";
 
-import { statuses } from '@/data/data';
-import { DataTableFacetedFilter } from './data-table-faceted-filter';
-import SaveNewMeeting from '../save-new-meeting';
-import MeetingForm from '../meetings-form';
+import { statuses } from "@/data/data";
+import { DataTableFacetedFilter } from "./data-table-faceted-filter";
+import SaveNewRecord from "../save-new-record";
+import MeetingForm from "../meetings-form";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -26,15 +26,15 @@ export function DataTableToolbar<TData>({
       <div className="flex flex-1 items-center space-x-2">
         <Input
           placeholder="Filter meetings..."
-          value={(table.getColumn('title')?.getFilterValue() as string) ?? ''}
+          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn('title')?.setFilterValue(event.target.value)
+            table.getColumn("title")?.setFilterValue(event.target.value)
           }
           className="h-8 w-[150px] lg:w-[250px]"
         />
-        {table.getColumn('status') && (
+        {table.getColumn("status") && (
           <DataTableFacetedFilter
-            column={table.getColumn('status')}
+            column={table.getColumn("status")}
             title="Status"
             options={statuses}
           />
@@ -51,14 +51,15 @@ export function DataTableToolbar<TData>({
         )}
       </div>
       <div className="ml-auto mr-4">
-        <SaveNewMeeting
+        <SaveNewRecord
           title="Add New Meeting"
           description="This will save the details of the new meeting message as a preset,
             which you can access later or share with others."
+          dialogTriggerTitle="Add Meeting"
           showDialogTrigger
         >
           <MeetingForm />
-        </SaveNewMeeting>
+        </SaveNewRecord>
       </div>
       <DataTableViewOptions table={table} />
     </div>
