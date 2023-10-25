@@ -36,6 +36,7 @@ export const formFieldsSchema = z.array(formFieldSchema);
 
 export interface RecordFormProps {
   values: Record<string, any>;
+  submitButtonText?: string;
   isReadOnly?: boolean;
   formSchema: any;
   formFields: z.infer<typeof formFieldsSchema>;
@@ -58,6 +59,7 @@ export default function RecordForm({
   isReadOnly,
   formSchema,
   formFields,
+  submitButtonText,
 }: RecordFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -103,7 +105,7 @@ export default function RecordForm({
             <Button variant="ghost" type="button">
               Cancel
             </Button>
-            <Button type="submit">Submit</Button>
+            <Button type="submit">{submitButtonText ?? "Submit"}</Button>
           </div>
         )}
       </form>
