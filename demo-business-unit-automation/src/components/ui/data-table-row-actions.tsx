@@ -14,7 +14,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import SaveNewRecord from "../save-new-record";
 import { useState } from "react";
-import MeetingForm from "../meetings-form";
+import MeetingForm from "../record-form";
+import { meetingFormSchema } from "@/data/form.schema";
+import { meetingFormFields } from "@/data/data";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -65,7 +67,11 @@ export function DataTableRowActions<TData>({
         title="Edit Meeting"
         description="This will edit the details of the meeting message as a preset, which you can access later or share with others."
       >
-        <MeetingForm values={row.original as any} />
+        <MeetingForm
+          values={row.original as any}
+          formFields={meetingFormFields}
+          formSchema={meetingFormSchema}
+        />
       </SaveNewRecord>
       <SaveNewRecord
         open={showViewDialog}
@@ -73,7 +79,12 @@ export function DataTableRowActions<TData>({
         title="View Meeting"
         description="This will show the details of the meeting message as a preset, which you can access later or share with others."
       >
-        <MeetingForm values={row.original as any} isReadOnly />
+        <MeetingForm
+          values={row.original as any}
+          formFields={meetingFormFields}
+          formSchema={meetingFormSchema}
+          isReadOnly
+        />
       </SaveNewRecord>
     </>
   );

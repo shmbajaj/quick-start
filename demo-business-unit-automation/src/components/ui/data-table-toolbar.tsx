@@ -7,10 +7,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DataTableViewOptions } from "@/components/ui/data-table-view-options";
 
-import { statuses } from "@/data/data";
+import {
+  DEFAULT_MEETING_FORM_VALUES,
+  meetingFormFields,
+  statuses,
+} from "@/data/data";
 import { DataTableFacetedFilter } from "./data-table-faceted-filter";
 import SaveNewRecord from "../save-new-record";
-import MeetingForm from "../meetings-form";
+import MeetingForm from "../record-form";
+import { meetingFormSchema } from "@/data/form.schema";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -58,7 +63,11 @@ export function DataTableToolbar<TData>({
           dialogTriggerTitle="Add Meeting"
           showDialogTrigger
         >
-          <MeetingForm />
+          <MeetingForm
+            values={DEFAULT_MEETING_FORM_VALUES}
+            formFields={meetingFormFields}
+            formSchema={meetingFormSchema}
+          />
         </SaveNewRecord>
       </div>
       <DataTableViewOptions table={table} />
