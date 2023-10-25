@@ -6,15 +6,21 @@ import "./index.css";
 import Meetings from "./routes/meetings.tsx";
 import Payments from "./routes/payments.tsx";
 import Root from "./routes/root.tsx";
+import ErrorPage from "./pages/error-page.tsx";
+import {
+  getMeetings as meetingsLoader,
+  getPayments as paymentsLoader,
+} from "@/utils/simulate-db.ts";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
+    errorElement: <ErrorPage />,
     children: [
-      { element: <Meetings />, index: true },
-      { path: "meetings", element: <Meetings />, index: true },
-      { path: "payments", element: <Payments /> },
+      { element: <Meetings />, index: true, loader: meetingsLoader },
+      { path: "meetings", element: <Meetings />, loader: meetingsLoader },
+      { path: "payments", element: <Payments />, loader: paymentsLoader },
     ],
   },
 ]);

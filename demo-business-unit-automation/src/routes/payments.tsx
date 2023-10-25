@@ -1,28 +1,25 @@
-import { getPayments } from "@/utils/simulate-db";
 import { paymentColumns as columns } from "@/data/columns";
-import { useEffect, useState } from "react";
 import { Payment } from "@/data/schema";
 import Layout from "@/components/layout";
+import { useLoaderData, useNavigation } from "react-router-dom";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const pageTitle = "Payments!";
 const pageDescription = "Here's a list of your payments!";
 
 export default function Payments() {
-  const [data, setPayments] = useState<Array<Payment>>([]);
+  const navigation = useNavigation();
+  const data = useLoaderData();
 
-  useEffect(() => {
-    async function getData() {
-      const data = await getPayments();
-      setPayments(data);
-    }
-    getData();
-  }, []);
+  if (navigation.state === "loading") {
+    return <Skeleton className="w-[100px] h-[20px] rounded-full" />;
+  }
 
   return (
     <Layout
       pageTitle={pageTitle}
       pageDescription={pageDescription}
-      data={data}
+      data={data as Array<Payment>}
       columns={columns}
     />
   );
