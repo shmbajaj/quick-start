@@ -6,7 +6,7 @@ import {
 } from "@radix-ui/react-icons";
 import * as z from "zod";
 
-import { meetingFormSchema } from "./form.schema";
+import { meetingFormSchema, paymentFormSchema } from "./form.schema";
 import { formFieldsSchema } from "@/components/record-form";
 
 export const statuses = [
@@ -42,6 +42,18 @@ export const DEFAULT_MEETING_FORM_VALUES: z.infer<typeof meetingFormSchema> = {
   startTime: "",
 };
 
+export const DEFAULT_PAYMENT_FORM_VALUES: z.infer<typeof paymentFormSchema> = {
+  clientName: "",
+  productName: "",
+  poDate: "",
+  deliveryDate: "",
+  payment: 0,
+  recievedPayment: 0,
+  location: "",
+  currency: "₹",
+  status: "",
+};
+
 export const meetingFormFields: z.infer<typeof formFieldsSchema> = [
   {
     name: "title",
@@ -71,4 +83,56 @@ export const meetingFormFields: z.infer<typeof formFieldsSchema> = [
     description: "This is your meeting location.",
     type: "text",
   },
+];
+
+export const paymentFormFields: z.infer<typeof formFieldsSchema> = [
+  {
+    name: "clientName",
+    label: "Client Name",
+    placeholder: "Programming the bandwidth...",
+    description: "This is client name.",
+    type: "text",
+  },
+  // {
+  //   name: "productName",
+  //   label: "Product Name",
+  //   placeholder: "Programming the bandwidth...",
+  //   description: "This is product name.",
+  //   type: "text",
+  // },
+  {
+    name: "poDate",
+    label: "PO Date",
+    placeholder: "Programming the bandwidth...",
+    description: "This is your purchase order date.",
+    type: "date",
+  },
+  // {
+  //   name: "deliveryDate",
+  //   label: "Delivery Date",
+  //   placeholder: "Programming the bandwidth...",
+  //   description: "This is your delivery date.",
+  //   type: "date",
+  // },
+  {
+    name: "payment",
+    label: "Total Payment",
+    placeholder: "Programming the bandwidth...",
+    description: "This is your total payment(amount).",
+    type: "number",
+  },
+  {
+    name: "recievedPayment",
+    label: "Recived Payment",
+    placeholder: "Programming the bandwidth...",
+    description: "This is your total recieved payment(amount).",
+    type: "number",
+  },
+  // {
+  //   name: "location",
+  //   label: "Location",
+  //   placeholder: "Programming the bandwidth...",
+  //   description: "This is location.",
+  //   type: "text",
+  // },
 ];
