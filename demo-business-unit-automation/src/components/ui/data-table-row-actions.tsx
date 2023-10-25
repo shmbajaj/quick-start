@@ -14,9 +14,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import SaveNewRecord from "../save-new-record";
 import { useState } from "react";
-import MeetingForm from "../record-form";
-import { meetingFormSchema } from "@/data/form.schema";
-import { meetingFormFields } from "@/data/data";
+import RecordForm from "../record-form";
+import { meetingFormSchema, paymentFormSchema } from "@/data/form.schema";
+import { meetingFormFields, paymentFormFields } from "@/data/data";
+import { useLocation } from "react-router-dom";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -27,6 +28,9 @@ export function DataTableRowActions<TData>({
 }: DataTableRowActionsProps<TData>) {
   const [open, setIsOpen] = useState(false);
   const [showViewDialog, setShowViewDialog] = useState(false);
+  const location = useLocation();
+  const filterKey = location.pathname === "/payments" ? "clientName" : "title";
+
   return (
     <>
       <DropdownMenu>
@@ -64,25 +68,38 @@ export function DataTableRowActions<TData>({
       <SaveNewRecord
         open={open}
         onOpenChange={setIsOpen}
-        title="Edit Meeting"
-        description="This will edit the details of the meeting message as a preset, which you can access later or share with others."
+        title={`Edit ${filterKey === "title" ? "Meeting" : "Payment"}`}
+        description={`This will edit the details of the ${
+          filterKey === "title" ? "Meeting" : "Payment"
+        } message as a preset, which you can access later or share with others.`}
       >
-        <MeetingForm
+        <RecordForm
           values={row.original as any}
-          formFields={meetingFormFields}
-          formSchema={meetingFormSchema}
+          formFields={
+            filterKey === "title" ? meetingFormFields : paymentFormFields
+          }
+          formSchema={
+            filterKey === "title" ? meetingFormSchema : paymentFormSchema
+          }
+          submitButtonText="Save"
         />
       </SaveNewRecord>
       <SaveNewRecord
         open={showViewDialog}
         onOpenChange={setShowViewDialog}
-        title="View Meeting"
-        description="This will show the details of the meeting message as a preset, which you can access later or share with others."
+        title={`View ${filterKey === "title" ? "Meeting" : "Payment"}`}
+        description={`This will show the details of the ${
+          filterKey === "title" ? "Meeting" : "Payment"
+        } message as a preset, which you can access later or share with others.`}
       >
-        <MeetingForm
+        <RecordForm
           values={row.original as any}
-          formFields={meetingFormFields}
-          formSchema={meetingFormSchema}
+          formFields={
+            filterKey === "title" ? meetingFormFields : paymentFormFields
+          }
+          formSchema={
+            filterKey === "title" ? meetingFormSchema : paymentFormSchema
+          }
           isReadOnly
         />
       </SaveNewRecord>
