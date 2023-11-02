@@ -1,6 +1,5 @@
 import * as z from "zod";
 import {
-  Form,
   FormControl,
   FormDescription,
   FormField,
@@ -8,22 +7,19 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { FormFieldDefinitions } from "@/types";
+import { FormFieldDefinitions, StepFormProps } from "@/types";
 import { Input } from "../ui/input";
 import FormWrapper from "./form-wrapper";
+import { DemoFormSchema } from "@/routes/demo-form";
 
-const dispatchFormSchema = z.object({
-  materialDispatchDate: z.coerce.date(),
-  materialRecievedDate: z.coerce.date().max(new Date(), {
-    message: "Production Start Date must be in the past",
-  }),
-  paymentTerms: z.string(),
-  tentaiveComissionhDate: z.coerce.date(),
-}).refine(data => data.materialDispatchDate > data.materialRecievedDate);
+export const DispatchFormSchema = DemoFormSchema.pick({
+  materialDispatchDate: true,
+  materialRecievedDate: true,
+  paymentTerms: true,
+  tentaiveComissionhDate: true,
+});
 
-type DispatchFormInput = z.infer<typeof dispatchFormSchema>;
+type DispatchFormInput = z.infer<typeof DispatchFormSchema>;
 
 const dispatchFormFieldDefinitions: FormFieldDefinitions<DispatchFormInput> = [
   {
@@ -60,54 +56,35 @@ const dispatchFormFieldDefinitions: FormFieldDefinitions<DispatchFormInput> = [
   },
 ];
 
-export default function DispatchForm() {
-  const form = useForm<DispatchFormInput>({
-    resolver: zodResolver(dispatchFormSchema),
-    defaultValues: {
-      materialDispatchDate: new Date(),
-      materialRecievedDate: new Date(),
-      paymentTerms: "",
-      tentaiveComissionhDate: new Date(),
-    },
-  });
-
+export default function DispatchForm({ control }: StepFormProps) {
   return (
     <FormWrapper
       title="Dispatch Form"
       description="Manage your account settings and set e-mail preferences."
     >
-      <Form {...form}>
-        <form
-          className="space-y-8"
-          onSubmit={form.handleSubmit((designFormData) =>
-            console.log({ designFormData })
+      {dispatchFormFieldDefinitions.map((formField) => (
+        <FormField
+          key={formField.id}
+          name={formField.name}
+          control={control}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{formField.label}</FormLabel>
+              <FormControl>
+                {/* TODO: fix type assertions */}
+                <Input
+                  {...field}
+                  placeholder={formField.placeholder}
+                  type={formField.type}
+                  value={field.value as string}
+                />
+              </FormControl>
+              <FormDescription>{formField.description}</FormDescription>
+              <FormMessage />
+            </FormItem>
           )}
-        >
-          {dispatchFormFieldDefinitions.map((formField) => (
-            <FormField
-              key={formField.id}
-              name={formField.name}
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{formField.label}</FormLabel>
-                  <FormControl>
-                    {/* TODO: fix type assertions */}
-                    <Input
-                      {...field}
-                      placeholder={formField.placeholder}
-                      type={formField.type}
-                      value={field.value as string}
-                    />
-                  </FormControl>
-                  <FormDescription>{formField.description}</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          ))}
-        </form>
-      </Form>
+        />
+      ))}
     </FormWrapper>
   );
 }

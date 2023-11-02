@@ -1,6 +1,5 @@
 import * as z from "zod";
 import {
-  Form,
   FormControl,
   FormDescription,
   FormField,
@@ -8,38 +7,16 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { FormFieldDefinitions } from "@/types";
+import { FormFieldDefinitions, StepFormProps } from "@/types";
 import { Input } from "../ui/input";
 import FormWrapper from "./form-wrapper";
+import { DemoFormSchema } from "@/routes/demo-form";
 
-const ServiceCallFormSchema = z.object({
-  siteEngineer: z
-    .string()
-    .min(4, { message: "The site engineer name must be 4 characters or more" })
-    .max(27, {
-      message: "The site engineer name must be 27 characters or less",
-    })
-    .regex(/^[a-zA-Z]+$/, "The site engineer name must contain only letters"),
-  siteLocation: z
-    .string()
-    .min(4, { message: "The site location must be 4 characters or more" })
-    .max(120, { message: "The site location must be 120 characters or less" }),
-  sitePersonName: z
-    .string()
-    .min(4, { message: "The site person name must be 4 characters or more" })
-    .max(27, { message: "The site person name must be 27 characters or less" })
-    .regex(/^[a-zA-Z]+$/, "The site person name must contain only letters"),
-  sitePersonNumber: z
-    .string()
-    .min(10, {
-      message: "The site person number must be 10 characters",
-    })
-    .max(10, {
-      message: "The site person number must be 10 characters",
-    })
-    .regex(/^[6-9]\d{9}$/, "The site person number must contain numbers"),
+export const ServiceCallFormSchema = DemoFormSchema.pick({
+  siteEngineer: true,
+  siteLocation: true,
+  sitePersonName: true,
+  sitePersonNumber: true,
 });
 
 type ServiceFormInput = z.infer<typeof ServiceCallFormSchema>;
@@ -79,52 +56,33 @@ const serviceFormFieldDefinitions: FormFieldDefinitions<ServiceFormInput> = [
   },
 ];
 
-export default function ServiceCallForm() {
-  const form = useForm<ServiceFormInput>({
-    resolver: zodResolver(ServiceCallFormSchema),
-    defaultValues: {
-      siteEngineer: "",
-      siteLocation: "",
-      sitePersonName: "",
-      sitePersonNumber: "",
-    },
-  });
-
+export default function ServiceCallForm({ control }: StepFormProps) {
   return (
     <FormWrapper
       title="Service Call Form"
       description="Manage your account settings and set e-mail preferences."
     >
-      <Form {...form}>
-        <form
-          className="space-y-8"
-          onSubmit={form.handleSubmit((designFormData) =>
-            console.log({ designFormData })
+      {serviceFormFieldDefinitions.map((formField) => (
+        <FormField
+          key={formField.id}
+          name={formField.name}
+          control={control}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{formField.label}</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  placeholder={formField.placeholder}
+                  type={formField.type}
+                />
+              </FormControl>
+              <FormDescription>{formField.description}</FormDescription>
+              <FormMessage />
+            </FormItem>
           )}
-        >
-          {serviceFormFieldDefinitions.map((formField) => (
-            <FormField
-              key={formField.id}
-              name={formField.name}
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{formField.label}</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      placeholder={formField.placeholder}
-                      type={formField.type}
-                    />
-                  </FormControl>
-                  <FormDescription>{formField.description}</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          ))}
-        </form>
-      </Form>
+        />
+      ))}
     </FormWrapper>
   );
 }

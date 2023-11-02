@@ -1,6 +1,5 @@
 import * as z from "zod";
 import {
-  Form,
   FormControl,
   FormDescription,
   FormField,
@@ -8,32 +7,21 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { FormFieldDefinitions } from "@/types";
+import { FormFieldDefinitions, StepFormProps } from "@/types";
 import { Input } from "../ui/input";
 import FormWrapper from "./form-wrapper";
 import { Checkbox } from "../ui/checkbox";
+import { DemoFormSchema } from "@/routes/demo-form";
 
-const manufacturingFormSchema = z
-  .object({
-    productionStartDate: z.coerce
-      .date()
-      .max(new Date(), {
-        message: "Production Start Date must be in the past",
-      }),
-    productionEndDate: z.coerce.date(),
-    rawMaterialsUsed: z.string().min(3).max(200),
-    qualityControlCheck: z.coerce.boolean(),
-    supervisor: z.string().min(3).max(27),
-  })
-  .refine((data) => data.productionEndDate > data.productionStartDate, {
-    message:
-      "Production End date must be greater than the Production Start Date',",
-    path: ["productionEndDate"],
-  });
+export const ManufacturingFormSchema = DemoFormSchema.pick({
+  productionStartDate: true,
+  productionEndDate: true,
+  rawMaterialsUsed: true,
+  qualityControlCheck: true,
+  supervisor: true,
+});
 
-type ManufacturingFormInput = z.infer<typeof manufacturingFormSchema>;
+type ManufacturingFormInput = z.infer<typeof ManufacturingFormSchema>;
 
 const manufacturingFormFieldDefinitions: FormFieldDefinitions<ManufacturingFormInput> =
   [
@@ -79,69 +67,49 @@ const manufacturingFormFieldDefinitions: FormFieldDefinitions<ManufacturingFormI
     },
   ];
 
-export default function ManufacturingForm() {
-  const form = useForm<ManufacturingFormInput>({
-    resolver: zodResolver(manufacturingFormSchema),
-    defaultValues: {
-      productionStartDate: new Date(),
-      productionEndDate: new Date(),
-      rawMaterialsUsed: "",
-      qualityControlCheck: true,
-      supervisor: "",
-    },
-  });
-
+export default function ManufacturingForm({ control }: StepFormProps) {
   return (
     <FormWrapper
       title="Manufacturing Form"
       description="Manage your account settings and set e-mail preferences."
     >
-      <Form {...form}>
-        <form
-          className="space-y-8"
-          onSubmit={form.handleSubmit((designFormData) =>
-            console.log({ designFormData })
+      {manufacturingFormFieldDefinitions.map((formField) => (
+        <FormField
+          key={formField.id}
+          name={formField.name}
+          control={control}
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                {/* TODO: fix type assertions */}
+                {formField.type === "checkbox" ? (
+                  <>
+                    <Checkbox
+                      checked={field.value as boolean}
+                      onCheckedChange={field.onChange}
+                    />
+                    <div className="space-y-1">
+                      <FormLabel>{formField.label}</FormLabel>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <FormLabel>{formField.label}</FormLabel>
+                    <Input
+                      {...field}
+                      placeholder={formField.placeholder}
+                      type={formField.type}
+                      value={field.value as string}
+                    />
+                  </>
+                )}
+              </FormControl>
+              <FormDescription>{formField.description}</FormDescription>
+              <FormMessage />
+            </FormItem>
           )}
-        >
-          {manufacturingFormFieldDefinitions.map((formField) => (
-            <FormField
-              key={formField.id}
-              name={formField.name}
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    {/* TODO: fix type assertions */}
-                    {formField.type === "checkbox" ? (
-                      <>
-                        <Checkbox
-                          checked={field.value as boolean}
-                          onCheckedChange={field.onChange}
-                        />
-                        <div className="space-y-1">
-                          <FormLabel>{formField.label}</FormLabel>
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <FormLabel>{formField.label}</FormLabel>
-                        <Input
-                          {...field}
-                          placeholder={formField.placeholder}
-                          type={formField.type}
-                          value={field.value as string}
-                        />
-                      </>
-                    )}
-                  </FormControl>
-                  <FormDescription>{formField.description}</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          ))}
-        </form>
-      </Form>
+        />
+      ))}
     </FormWrapper>
   );
 }

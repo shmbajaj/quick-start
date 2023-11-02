@@ -1,6 +1,5 @@
 import * as z from "zod";
 import {
-  Form,
   FormControl,
   FormDescription,
   FormField,
@@ -8,25 +7,19 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { FormFieldDefinitions } from "@/types";
+import { FormFieldDefinitions, StepFormProps } from "@/types";
 import { Input } from "../ui/input";
 import FormWrapper from "./form-wrapper";
+import { DemoFormSchema } from "@/routes/demo-form";
 
-const DesignFormSchema = z.object({
-  jobID: z
-    .string()
-    .regex(
-      /^[a-zA-Z0-9_]+$/,
-      "The jobID must contain only letters, numbers and underscore (_)"
-    ),
-  model: z.string().min(3).max(50),
-  client: z.string().min(3).max(25),
-  product: z.string().min(3).max(50),
-  siteAddress: z.string().min(10).max(100),
-  contactPerson: z.string().min(3).max(23),
-  payment: z.number().min(0).max(100),
+const DesignFormSchema = DemoFormSchema.pick({
+  jobID: true,
+  model: true,
+  client: true,
+  product: true,
+  siteAddress: true,
+  contactPerson: true,
+  payment: true,
 });
 
 type DesignFormInput = z.infer<typeof DesignFormSchema>;
@@ -90,55 +83,33 @@ const designFormFieldDefinitions: FormFieldDefinitions<DesignFormInput> = [
   },
 ];
 
-export default function DesignForm() {
-  const form = useForm<DesignFormInput>({
-    resolver: zodResolver(DesignFormSchema),
-    defaultValues: {
-      jobID: "",
-      model: "",
-      client: "",
-      product: "",
-      siteAddress: "",
-      contactPerson: "",
-      payment: 0,
-    },
-  });
-
+export default function DesignForm({ control }: StepFormProps) {
   return (
     <FormWrapper
       title="Design Form"
       description="Manage your account settings and set e-mail preferences."
     >
-      <Form {...form}>
-        <form
-          className="space-y-8"
-          onSubmit={form.handleSubmit((designFormData) =>
-            console.log({ designFormData })
+      {designFormFieldDefinitions.map((formField) => (
+        <FormField
+          key={formField.id}
+          name={formField.name}
+          control={control}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{formField.label}</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  placeholder={formField.placeholder}
+                  type={formField.type}
+                />
+              </FormControl>
+              <FormDescription>{formField.description}</FormDescription>
+              <FormMessage />
+            </FormItem>
           )}
-        >
-          {designFormFieldDefinitions.map((formField) => (
-            <FormField
-              key={formField.id}
-              name={formField.name}
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{formField.label}</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      placeholder={formField.placeholder}
-                      type={formField.type}
-                    />
-                  </FormControl>
-                  <FormDescription>{formField.description}</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          ))}
-        </form>
-      </Form>
+        />
+      ))}
     </FormWrapper>
   );
 }
