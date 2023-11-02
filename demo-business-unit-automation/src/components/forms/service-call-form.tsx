@@ -1,3 +1,4 @@
+import { ServiceCallFormSchema } from "@/data/form.schema";
 import * as z from "zod";
 import {
   FormControl,
@@ -10,14 +11,6 @@ import {
 import { FormFieldDefinitions, StepFormProps } from "@/types";
 import { Input } from "../ui/input";
 import FormWrapper from "./form-wrapper";
-import { DemoFormSchema } from "@/routes/demo-form";
-
-export const ServiceCallFormSchema = DemoFormSchema.pick({
-  siteEngineer: true,
-  siteLocation: true,
-  sitePersonName: true,
-  sitePersonNumber: true,
-});
 
 type ServiceFormInput = z.infer<typeof ServiceCallFormSchema>;
 

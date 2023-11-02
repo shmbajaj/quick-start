@@ -1,4 +1,5 @@
 import * as z from "zod";
+import { ManufacturingFormSchema } from "@/data/form.schema";
 import {
   FormControl,
   FormDescription,
@@ -11,15 +12,6 @@ import { FormFieldDefinitions, StepFormProps } from "@/types";
 import { Input } from "../ui/input";
 import FormWrapper from "./form-wrapper";
 import { Checkbox } from "../ui/checkbox";
-import { DemoFormSchema } from "@/routes/demo-form";
-
-export const ManufacturingFormSchema = DemoFormSchema.pick({
-  productionStartDate: true,
-  productionEndDate: true,
-  rawMaterialsUsed: true,
-  qualityControlCheck: true,
-  supervisor: true,
-});
 
 type ManufacturingFormInput = z.infer<typeof ManufacturingFormSchema>;
 

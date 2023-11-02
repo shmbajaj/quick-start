@@ -1,79 +1,14 @@
 import * as z from "zod";
+import { DemoFormSchema } from "@/data/form.schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { Form } from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
+import useMultiStepForm from "@/hooks/useMultiStepForm";
 import DesignForm from "@/components/forms/design-form";
 import DispatchForm from "@/components/forms/dispatch-form";
 import ManufacturingForm from "@/components/forms/manufacturing-form";
 import ServiceCallForm from "@/components/forms/service-call-form";
-import { Button } from "@/components/ui/button";
-import useMultiStepForm from "@/hooks/useMultiStepForm";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Form } from "@/components/ui/form";
-
-// TODO: use the below constraints/refine
-export const DemoFormSchema = z.object({
-  jobID: z
-    .string()
-    .regex(
-      /^[a-zA-Z0-9_]+$/,
-      "The jobID must contain only letters, numbers and underscore (_)"
-    ),
-  model: z.string().min(3).max(50),
-  client: z.string().min(3).max(25),
-  product: z.string().min(3).max(50),
-  siteAddress: z.string().min(10).max(100),
-  contactPerson: z.string().min(3).max(23),
-  payment: z.number().min(0).max(100),
-  productionStartDate: z.coerce.date().max(new Date(), {
-    message: "Production Start Date must be in the past",
-  }),
-  productionEndDate: z.coerce.date(),
-  rawMaterialsUsed: z.string().min(3).max(200),
-  qualityControlCheck: z.coerce.boolean(),
-  supervisor: z.string().min(3).max(27),
-  materialDispatchDate: z.coerce.date(),
-  materialRecievedDate: z.coerce.date().max(new Date(), {
-    message: "Production Start Date must be in the past",
-  }),
-  paymentTerms: z.string(),
-  tentaiveComissionhDate: z.coerce.date(),
-  siteEngineer: z
-    .string()
-    .min(4, {
-      message: "The site engineer name must be 4 characters or more",
-    })
-    .max(27, {
-      message: "The site engineer name must be 27 characters or less",
-    })
-    .regex(/^[a-zA-Z]+$/, "The site engineer name must contain only letters"),
-  siteLocation: z
-    .string()
-    .min(4, { message: "The site location must be 4 characters or more" })
-    .max(120, {
-      message: "The site location must be 120 characters or less",
-    }),
-  sitePersonName: z
-    .string()
-    .min(4, { message: "The site person name must be 4 characters or more" })
-    .max(27, {
-      message: "The site person name must be 27 characters or less",
-    })
-    .regex(/^[a-zA-Z]+$/, "The site person name must contain only letters"),
-  sitePersonNumber: z
-    .string()
-    .min(10, {
-      message: "The site person number must be 10 characters",
-    })
-    .max(10, {
-      message: "The site person number must be 10 characters",
-    })
-    .regex(/^[6-9]\d{9}$/, "The site person number must contain numbers"),
-});
-// .refine((data) => data.productionEndDate > data.productionStartDate, {
-//   message:
-//     "Production End date must be greater than the Production Start Date',",
-//   path: ["productionEndDate"],
-// })
-// .refine((data) => data.materialDispatchDate > data.materialRecievedDate);
 
 export type DemoFormInput = z.infer<typeof DemoFormSchema>;
 

@@ -1,3 +1,4 @@
+import { DispatchFormSchema } from "@/data/form.schema";
 import * as z from "zod";
 import {
   FormControl,
@@ -10,14 +11,6 @@ import {
 import { FormFieldDefinitions, StepFormProps } from "@/types";
 import { Input } from "../ui/input";
 import FormWrapper from "./form-wrapper";
-import { DemoFormSchema } from "@/routes/demo-form";
-
-export const DispatchFormSchema = DemoFormSchema.pick({
-  materialDispatchDate: true,
-  materialRecievedDate: true,
-  paymentTerms: true,
-  tentaiveComissionhDate: true,
-});
 
 type DispatchFormInput = z.infer<typeof DispatchFormSchema>;
 

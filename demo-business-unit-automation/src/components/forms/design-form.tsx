@@ -1,4 +1,6 @@
+import { DesignFormSchema } from "@/data/form.schema";
 import * as z from "zod";
+import { FormFieldDefinitions, StepFormProps } from "@/types";
 import {
   FormControl,
   FormDescription,
@@ -7,20 +9,8 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import { FormFieldDefinitions, StepFormProps } from "@/types";
-import { Input } from "../ui/input";
 import FormWrapper from "./form-wrapper";
-import { DemoFormSchema } from "@/routes/demo-form";
-
-const DesignFormSchema = DemoFormSchema.pick({
-  jobID: true,
-  model: true,
-  client: true,
-  product: true,
-  siteAddress: true,
-  contactPerson: true,
-  payment: true,
-});
+import { Input } from "../ui/input";
 
 type DesignFormInput = z.infer<typeof DesignFormSchema>;
 
