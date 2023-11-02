@@ -33,7 +33,7 @@ export const DemoFormSchema = z.object({
   product: z.string().min(3).max(50),
   siteAddress: z.string().min(10).max(100),
   contactPerson: z.string().min(3).max(23),
-  payment: z.number().min(0).max(100),
+  payment: z.coerce.number().min(0).max(100),
   productionStartDate: z.coerce.date().max(new Date(), {
     message: "Production Start Date must be in the past",
   }),
@@ -43,7 +43,7 @@ export const DemoFormSchema = z.object({
   supervisor: z.string().min(3).max(27),
   materialDispatchDate: z.coerce.date(),
   materialRecievedDate: z.coerce.date().max(new Date(), {
-    message: "Production Start Date must be in the past",
+    message: "Material Recieve Date must be in the past",
   }),
   paymentTerms: z.string(),
   tentaiveComissionhDate: z.coerce.date(),

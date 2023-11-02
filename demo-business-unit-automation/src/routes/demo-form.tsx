@@ -1,7 +1,13 @@
 import * as z from "zod";
-import { DemoFormSchema } from "@/data/form.schema";
+import {
+  DemoFormSchema,
+  DesignFormSchema,
+  DispatchFormSchema,
+  ManufacturingFormSchema,
+  ServiceCallFormSchema,
+} from "@/data/form.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { FieldName, useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import useMultiStepForm from "@/hooks/useMultiStepForm";
@@ -11,6 +17,12 @@ import ManufacturingForm from "@/components/forms/manufacturing-form";
 import ServiceCallForm from "@/components/forms/service-call-form";
 
 export type DemoFormInput = z.infer<typeof DemoFormSchema>;
+const stepFields = [
+  Object.keys(DesignFormSchema.shape),
+  Object.keys(ManufacturingFormSchema.shape),
+  Object.keys(DispatchFormSchema.shape),
+  Object.keys(ServiceCallFormSchema.shape),
+];
 
 export default function DemoMultiStepForm() {
   const form = useForm<DemoFormInput>({
@@ -53,15 +65,31 @@ export default function DemoMultiStepForm() {
     <DispatchForm control={form.control} />,
     <ServiceCallForm control={form.control} />,
   ]);
+
+  async function handleNext() {
+    const fields = stepFields[currentStepIndex] as FieldName<DemoFormInput>[];
+    const output = await form.trigger(fields, {
+      shouldFocus: true,
+    });
+    if (!output) return;
+    // TODO: fix handleSubmit handler is not getting called
+    // INFO: on using some of forms submit handler was not getting fired!!, fields didn't tocuhed. Check code and ask question.
+    if (isLastStep) {
+      await form.handleSubmit(processForm)();
+      console.log({ values: form.getValues() });
+    }
+    next();
+  }
+
+  function processForm(demoFormData: DemoFormInput) {
+    console.log({ demoFormData });
+    form.reset();
+  }
+
   return (
     <div className="relative max-w-4xl m-auto">
       <Form {...form}>
-        <form
-          className="space-y-8"
-          onSubmit={form.handleSubmit((designFormData) =>
-            console.log({ designFormData })
-          )}
-        >
+        <form className="space-y-8" onSubmit={form.handleSubmit(processForm)}>
           <div className="absolute top-2 right-2">
             {currentStepIndex + 1} / {totalSteps}
           </div>
@@ -73,7 +101,7 @@ export default function DemoMultiStepForm() {
                   Previous
                 </Button>
               )}
-              <Button type="button" onClick={next} className="ml-auto">
+              <Button type="button" onClick={handleNext} className="ml-auto">
                 {isLastStep ? "Submit" : "Next"}
               </Button>
             </div>
