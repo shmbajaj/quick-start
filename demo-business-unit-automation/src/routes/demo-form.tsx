@@ -4,11 +4,6 @@ import ManufacturingForm from "@/components/forms/manufacturing-form";
 import ServiceCallForm from "@/components/forms/service-call-form";
 import { Button } from "@/components/ui/button";
 import useMultiStepForm from "@/hooks/useMultiStepForm";
-// import {
-//   ChevronLeftIcon,
-//   ChevronRightIcon,
-//   SendHorizontalIcon,
-// } from "lucide-react";
 
 export default function DemoMultiStepForm() {
   const {
@@ -26,26 +21,22 @@ export default function DemoMultiStepForm() {
     <ServiceCallForm />,
   ]);
   return (
-    <div className="relative">
+    <div className="relative max-w-4xl m-auto">
       <div className="absolute top-2 right-2">
         {currentStepIndex + 1} / {totalSteps}
       </div>
-      {step}
-      <div>
-        {!isFirstStep && (
-          <Button type="button" onClick={back}>
-            Previous
-            {/* <ChevronLeftIcon className="mr-2 h-4 w-4" />  */}
+      <div className="flex flex-col">
+        {step}
+        <div className="flex justify-between p-10 pb-4">
+          {!isFirstStep && (
+            <Button type="button" onClick={back}>
+              Previous
+            </Button>
+          )}
+          <Button type="button" onClick={next} className="ml-auto">
+            {isLastStep ? "Submit" : "Next"}
           </Button>
-        )}
-        <Button type="button" onClick={next}>
-          {isLastStep ? "Submit" : "Next"}
-          {/* {isLastStep ? (
-            <SendHorizontalIcon className="mr-2 h-4 w-4" />
-          ) : (
-            <ChevronRightIcon className="mr-2 h-4 w-4" />
-          )} */}
-        </Button>
+        </div>
       </div>
     </div>
   );
