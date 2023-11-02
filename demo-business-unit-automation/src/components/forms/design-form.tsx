@@ -15,13 +15,18 @@ import { Input } from "../ui/input";
 import FormWrapper from "./form-wrapper";
 
 const DesignFormSchema = z.object({
-  jobID: z.string(),
-  model: z.string(),
-  client: z.string(),
-  product: z.string(),
-  siteAddress: z.string(),
-  contactPerson: z.string(),
-  payment: z.string(),
+  jobID: z
+    .string()
+    .regex(
+      /^[a-zA-Z0-9_]+$/,
+      "The jobID must contain only letters, numbers and underscore (_)"
+    ),
+  model: z.string().min(3).max(50),
+  client: z.string().min(3).max(25),
+  product: z.string().min(3).max(50),
+  siteAddress: z.string().min(10).max(100),
+  contactPerson: z.string().min(3).max(23),
+  payment: z.number().min(0).max(100),
 });
 
 type DesignFormInput = z.infer<typeof DesignFormSchema>;
@@ -95,7 +100,7 @@ export default function DesignForm() {
       product: "",
       siteAddress: "",
       contactPerson: "",
-      payment: "",
+      payment: 0,
     },
   });
 

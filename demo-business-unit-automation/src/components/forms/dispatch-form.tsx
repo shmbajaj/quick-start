@@ -16,10 +16,12 @@ import FormWrapper from "./form-wrapper";
 
 const dispatchFormSchema = z.object({
   materialDispatchDate: z.coerce.date(),
-  materialRecievedDate: z.coerce.date(),
+  materialRecievedDate: z.coerce.date().max(new Date(), {
+    message: "Production Start Date must be in the past",
+  }),
   paymentTerms: z.string(),
   tentaiveComissionhDate: z.coerce.date(),
-});
+}).refine(data => data.materialDispatchDate > data.materialRecievedDate);
 
 type DispatchFormInput = z.infer<typeof dispatchFormSchema>;
 

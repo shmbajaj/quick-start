@@ -15,10 +15,31 @@ import { Input } from "../ui/input";
 import FormWrapper from "./form-wrapper";
 
 const ServiceCallFormSchema = z.object({
-  siteEngineer: z.string(),
-  siteLocation: z.string(),
-  sitePersonName: z.string(),
-  sitePersonNumber: z.string(),
+  siteEngineer: z
+    .string()
+    .min(4, { message: "The site engineer name must be 4 characters or more" })
+    .max(27, {
+      message: "The site engineer name must be 27 characters or less",
+    })
+    .regex(/^[a-zA-Z]+$/, "The site engineer name must contain only letters"),
+  siteLocation: z
+    .string()
+    .min(4, { message: "The site location must be 4 characters or more" })
+    .max(120, { message: "The site location must be 120 characters or less" }),
+  sitePersonName: z
+    .string()
+    .min(4, { message: "The site person name must be 4 characters or more" })
+    .max(27, { message: "The site person name must be 27 characters or less" })
+    .regex(/^[a-zA-Z]+$/, "The site person name must contain only letters"),
+  sitePersonNumber: z
+    .string()
+    .min(10, {
+      message: "The site person number must be 10 characters",
+    })
+    .max(10, {
+      message: "The site person number must be 10 characters",
+    })
+    .regex(/^[6-9]\d{9}$/, "The site person number must contain numbers"),
 });
 
 type ServiceFormInput = z.infer<typeof ServiceCallFormSchema>;

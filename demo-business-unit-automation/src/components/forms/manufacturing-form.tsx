@@ -15,13 +15,23 @@ import { Input } from "../ui/input";
 import FormWrapper from "./form-wrapper";
 import { Checkbox } from "../ui/checkbox";
 
-const manufacturingFormSchema = z.object({
-  productionStartDate: z.coerce.date(),
-  productionEndDate: z.coerce.date(),
-  rawMaterialsUsed: z.string(),
-  qualityControlCheck: z.coerce.boolean(),
-  supervisor: z.string(),
-});
+const manufacturingFormSchema = z
+  .object({
+    productionStartDate: z.coerce
+      .date()
+      .max(new Date(), {
+        message: "Production Start Date must be in the past",
+      }),
+    productionEndDate: z.coerce.date(),
+    rawMaterialsUsed: z.string().min(3).max(200),
+    qualityControlCheck: z.coerce.boolean(),
+    supervisor: z.string().min(3).max(27),
+  })
+  .refine((data) => data.productionEndDate > data.productionStartDate, {
+    message:
+      "Production End date must be greater than the Production Start Date',",
+    path: ["productionEndDate"],
+  });
 
 type ManufacturingFormInput = z.infer<typeof manufacturingFormSchema>;
 
