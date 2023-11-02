@@ -1,4 +1,6 @@
+import { DemoFormInput } from "@/routes/demo-form";
 import { HTMLInputTypeAttribute } from "react";
+import { Control } from "react-hook-form";
 
 export type FormFieldDefinitions<T> = Array<{
   id: keyof T;
@@ -8,3 +10,7 @@ export type FormFieldDefinitions<T> = Array<{
   description: string;
   type: HTMLInputTypeAttribute;
 }>;
+
+export type StepFormProps = {
+  control: Control<DemoFormInput, any>;
+};
