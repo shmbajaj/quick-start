@@ -54,6 +54,7 @@ export default function DemoMultiStepForm() {
   const {
     next,
     back,
+    reset,
     step,
     totalSteps,
     currentStepIndex,
@@ -84,6 +85,7 @@ export default function DemoMultiStepForm() {
   function processForm(demoFormData: DemoFormInput) {
     console.log({ demoFormData });
     form.reset();
+    reset();
   }
 
   return (

@@ -23,8 +23,8 @@ export default function useMultiStepForm(steps: MultiStepFormProps) {
     setCurrentStepIndex(prevStepIndex);
   }
 
-  function goto(index: number) {
-    setCurrentStepIndex(index);
+  function reset() {
+    setCurrentStepIndex(0);
   }
 
   return {
@@ -35,6 +35,6 @@ export default function useMultiStepForm(steps: MultiStepFormProps) {
     currentStepIndex,
     next,
     back,
-    goto,
+    reset,
   };
 }
