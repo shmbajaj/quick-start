@@ -21,7 +21,7 @@ export const paymentFormSchema = z.object({
   status: z.string(),
 });
 
-export const DemoFormSchema = z.object({
+export const DesignFormSchema = z.object({
   jobID: z
     .string()
     .regex(
@@ -34,6 +34,9 @@ export const DemoFormSchema = z.object({
   siteAddress: z.string().min(10).max(100),
   contactPerson: z.string().min(3).max(23),
   payment: z.coerce.number().min(0).max(100),
+});
+
+export const ManufacturingFormSchema = z.object({
   productionStartDate: z.coerce.date().max(new Date(), {
     message: "Production Start Date must be in the past",
   }),
@@ -41,12 +44,18 @@ export const DemoFormSchema = z.object({
   rawMaterialsUsed: z.string().min(3).max(200),
   qualityControlCheck: z.coerce.boolean(),
   supervisor: z.string().min(3).max(27),
+});
+
+export const DispatchFormSchema = z.object({
   materialDispatchDate: z.coerce.date(),
   materialRecievedDate: z.coerce.date().max(new Date(), {
     message: "Material Recieve Date must be in the past",
   }),
   paymentTerms: z.string(),
   tentaiveComissionhDate: z.coerce.date(),
+});
+
+export const ServiceCallFormSchema = z.object({
   siteEngineer: z
     .string()
     .min(4, {
@@ -80,42 +89,16 @@ export const DemoFormSchema = z.object({
     .regex(/^[6-9]\d{9}$/, "The site person number must contain numbers"),
 });
 
-// TODO: use the following constraints/refine for `DemoFormSchema`
-// .refine((data) => data.productionEndDate > data.productionStartDate, {
-//   message:
-//     "Production End date must be greater than the Production Start Date',",
-//   path: ["productionEndDate"],
-// })
-// .refine((data) => data.materialDispatchDate > data.materialRecievedDate);
-
-export const DesignFormSchema = DemoFormSchema.pick({
-  jobID: true,
-  model: true,
-  client: true,
-  product: true,
-  siteAddress: true,
-  contactPerson: true,
-  payment: true,
-});
-
-export const ManufacturingFormSchema = DemoFormSchema.pick({
-  productionStartDate: true,
-  productionEndDate: true,
-  rawMaterialsUsed: true,
-  qualityControlCheck: true,
-  supervisor: true,
-});
-
-export const DispatchFormSchema = DemoFormSchema.pick({
-  materialDispatchDate: true,
-  materialRecievedDate: true,
-  paymentTerms: true,
-  tentaiveComissionhDate: true,
-});
-
-export const ServiceCallFormSchema = DemoFormSchema.pick({
-  siteEngineer: true,
-  siteLocation: true,
-  sitePersonName: true,
-  sitePersonNumber: true,
-});
+export const DemoFormSchema = DesignFormSchema.merge(ManufacturingFormSchema)
+  .merge(DispatchFormSchema)
+  .merge(ServiceCallFormSchema)
+  .refine((data) => data.materialDispatchDate > data.materialRecievedDate, {
+    message:
+      "Material Dispatch date must be greater than the Material Recieve Date",
+    path: ["materialDispatchDate"],
+  })
+  .refine((data) => data.productionEndDate > data.productionStartDate, {
+    message:
+      "Production End date must be greater than the Production Start Date",
+    path: ["productionEndDate"],
+  });
