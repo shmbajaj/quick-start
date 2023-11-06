@@ -12,6 +12,7 @@ import {
   getPayments as paymentsLoader,
 } from "@/utils/simulate-db.ts";
 import DemoMultiStepForm from "./routes/demo-form.tsx";
+import Tasks from "./routes/tasks.tsx";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
       {
         path: "form",
         element: <DemoMultiStepForm />,
+      },
+      {
+        path: "tasks",
+        element: <Tasks />,
       },
     ],
   },
