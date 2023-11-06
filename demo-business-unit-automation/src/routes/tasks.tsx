@@ -10,7 +10,67 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Filter } from "lucide-react";
+import { CheckCircle, Circle, CircleEllipsis, Filter } from "lucide-react";
+
+const data = {
+  active: {
+    title: "Active",
+    icon: <Circle className="mt-px h-5 w-5" />,
+    data: [
+      {
+        title: "JOB1",
+        description: "Product to be installed for client A",
+        status: "requested",
+      },
+      {
+        title: "JOB2",
+        description: "Product to be installed for client B",
+        status: "approved",
+      },
+      {
+        title: "JOB3",
+        description: "Product to be installed for client C",
+        status: "open",
+      },
+    ],
+  },
+  ongoing: {
+    title: "Ongoing",
+    icon: <CircleEllipsis className="mt-px h-5 w-5" />,
+    data: [
+      {
+        title: "JOB1",
+        description: "Product to be installed for client A",
+      },
+      {
+        title: "JOB2",
+        description: "Product to be installed for client B",
+      },
+      {
+        title: "JOB3",
+        description: "Product to be installed for client C",
+      },
+    ],
+  },
+  done: {
+    title: "Done",
+    icon: <CheckCircle className="mt-px h-5 w-5" />,
+    data: [
+      {
+        title: "JOB1",
+        description: "Product to be installed for client A",
+      },
+      {
+        title: "JOB2",
+        description: "Product to be installed for client B",
+      },
+      {
+        title: "JOB3",
+        description: "Product to be installed for client C",
+      },
+    ],
+  },
+};
 
 export default function Tasks() {
   return (
@@ -61,13 +121,13 @@ export default function Tasks() {
               </TabsTrigger>
             </TabsList>
             <TabsContent value="active">
-              <TaskList title="Active" />
+              <TaskList {...data.active} />
             </TabsContent>
             <TabsContent value="ongoing">
-              <TaskList title="Ongoing" />
+              <TaskList {...data.ongoing} />
             </TabsContent>
             <TabsContent value="done">
-              <TaskList title="Done" />
+              <TaskList {...data.done} />
             </TabsContent>
           </Tabs>
         </CardContent>
