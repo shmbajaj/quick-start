@@ -1,18 +1,22 @@
 import * as z from "zod";
 import { currencySymbols } from "./data";
 
-export const advancePaymentFormSchema = z.object({
+export const AdvancePaymentFormSchema = z.object({
   advanceAmount: z.coerce.number().min(1),
   isAdvanceAmountRecieved: z.coerce.boolean(),
 });
 
-export const accomplishmentFormSchema = z.object({
+export const AccomplishmentFormSchema = z.object({
   leftAmount: z.coerce.number().min(1),
   isLeftAmountRecieved: z.coerce.boolean(),
   isPerformanceCertiticateRecieved: z.coerce.boolean(),
   performanceCertificateNotes: z.string(),
   designEngineerNotes: z.string(),
 });
+
+export const DemoTaskListFormSchema = AdvancePaymentFormSchema.merge(
+  AccomplishmentFormSchema
+);
 
 export const meetingFormSchema = z.object({
   title: z.string().min(3).max(50),

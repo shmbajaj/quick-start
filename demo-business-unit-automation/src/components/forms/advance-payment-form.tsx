@@ -1,6 +1,6 @@
 import * as z from "zod";
 import FormWrapper from "./form-wrapper";
-import { advancePaymentFormSchema } from "@/data/form.schema";
+import { AdvancePaymentFormSchema } from "@/data/form.schema";
 import { FormFieldDefinitions } from "@/types";
 import {
   FormControl,
@@ -12,8 +12,10 @@ import {
 } from "../ui/form";
 import { Checkbox } from "../ui/checkbox";
 import { Input } from "../ui/input";
+import { Control } from "react-hook-form";
+import { DemoTaskListInput } from "../task-list";
 
-type AdvancePaymentFormInput = z.infer<typeof advancePaymentFormSchema>;
+type AdvancePaymentFormInput = z.infer<typeof AdvancePaymentFormSchema>;
 
 const advancePaymentFormFieldDefinitions: FormFieldDefinitions<AdvancePaymentFormInput> =
   [
@@ -35,7 +37,11 @@ const advancePaymentFormFieldDefinitions: FormFieldDefinitions<AdvancePaymentFor
     },
   ];
 
-export default function AdvancePaymentForm() {
+export default function AdvancePaymentForm({
+  control,
+}: {
+  control: Control<DemoTaskListInput, any>;
+}) {
   return (
     <FormWrapper
       title="Advance Payment Form"
@@ -45,13 +51,13 @@ export default function AdvancePaymentForm() {
         <FormField
           key={formField.id}
           name={formField.name}
-        //   control={control}
+          control={control}
           render={({ field }) => (
             <FormItem>
               <FormControl>
                 {/* TODO: fix type assertions */}
                 {formField.type === "checkbox" ? (
-                  <>
+                  <div className="flex gap-1 items-center">
                     <Checkbox
                       checked={field.value as boolean}
                       onCheckedChange={field.onChange}
@@ -59,7 +65,7 @@ export default function AdvancePaymentForm() {
                     <div className="space-y-1">
                       <FormLabel>{formField.label}</FormLabel>
                     </div>
-                  </>
+                  </div>
                 ) : (
                   <>
                     <FormLabel>{formField.label}</FormLabel>
@@ -67,12 +73,14 @@ export default function AdvancePaymentForm() {
                       {...field}
                       placeholder={formField.placeholder}
                       type={formField.type}
-                      value={field.value as string}
+                      value={field.value as number}
                     />
                   </>
                 )}
               </FormControl>
-              <FormDescription>{formField.description}</FormDescription>
+              {formField.type !== "checkbox" && (
+                <FormDescription>{formField.description}</FormDescription>
+              )}
               <FormMessage />
             </FormItem>
           )}

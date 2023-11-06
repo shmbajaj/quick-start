@@ -1,6 +1,6 @@
 import * as z from "zod";
 import FormWrapper from "./form-wrapper";
-import { accomplishmentFormSchema } from "@/data/form.schema";
+import { AccomplishmentFormSchema } from "@/data/form.schema";
 import { FormFieldDefinitions } from "@/types";
 import {
   FormControl,
@@ -12,8 +12,10 @@ import {
 } from "../ui/form";
 import { Checkbox } from "../ui/checkbox";
 import { Input } from "../ui/input";
+import { DemoTaskListInput } from "../task-list";
+import { Control } from "react-hook-form";
 
-type AccomplishmentFormInput = z.infer<typeof accomplishmentFormSchema>;
+type AccomplishmentFormInput = z.infer<typeof AccomplishmentFormSchema>;
 
 const accomplishmentFormFieldDefinitions: FormFieldDefinitions<AccomplishmentFormInput> =
   [
@@ -59,7 +61,11 @@ const accomplishmentFormFieldDefinitions: FormFieldDefinitions<AccomplishmentFor
     },
   ];
 
-export default function AccomplishmentForm() {
+export default function AccomplishmentForm({
+  control,
+}: {
+  control: Control<DemoTaskListInput, any>;
+}) {
   return (
     <FormWrapper
       title="Advance Payment Form"
@@ -69,13 +75,13 @@ export default function AccomplishmentForm() {
         <FormField
           key={formField.id}
           name={formField.name}
-          //   control={control}
+          control={control}
           render={({ field }) => (
             <FormItem>
               <FormControl>
                 {/* TODO: fix type assertions */}
                 {formField.type === "checkbox" ? (
-                  <>
+                  <div className="flex gap-1 items-center">
                     <Checkbox
                       checked={field.value as boolean}
                       onCheckedChange={field.onChange}
@@ -83,7 +89,7 @@ export default function AccomplishmentForm() {
                     <div className="space-y-1">
                       <FormLabel>{formField.label}</FormLabel>
                     </div>
-                  </>
+                  </div>
                 ) : (
                   <>
                     <FormLabel>{formField.label}</FormLabel>
@@ -96,7 +102,9 @@ export default function AccomplishmentForm() {
                   </>
                 )}
               </FormControl>
-              <FormDescription>{formField.description}</FormDescription>
+              {formField.type !== "checkbox" && (
+                <FormDescription>{formField.description}</FormDescription>
+              )}{" "}
               <FormMessage />
             </FormItem>
           )}
