@@ -10,6 +10,7 @@ import { DemoTaskListFormSchema } from "@/data/form.schema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "./ui/button";
+import EngineerAtSiteForm from "./forms/site-report-form";
 
 export type DemoTaskListInput = z.infer<typeof DemoTaskListFormSchema>;
 
@@ -78,12 +79,16 @@ export default function TaskList({
               {title === "Done" && (
                 <AccomplishmentForm control={form.control} />
               )}
-              {title === "Ongoing" && <>No Form Available</>}
-              <div className="flex justify-between p-1 pb-4">
-                <Button type="button" className="ml-auto">
-                  Submit
-                </Button>
-              </div>
+              {title === "Ongoing" && (
+                <EngineerAtSiteForm control={form.control} />
+              )}
+              {title !== "Ongoing" && (
+                <div className="flex justify-between p-1 pb-4">
+                  <Button type="button" className="ml-auto">
+                    Submit
+                  </Button>
+                </div>
+              )}
             </form>
           </Form>
         </DialogContent>

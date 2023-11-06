@@ -14,9 +14,16 @@ export const AccomplishmentFormSchema = z.object({
   designEngineerNotes: z.string(),
 });
 
+export const EngineerAtSiteFormSchema = z.object({
+  hasInternet: z.coerce.boolean(),
+  cannotWork: z.coerce.boolean(),
+  cannotWorkNotes: z.coerce.boolean(),
+  location: z.string(),
+});
+
 export const DemoTaskListFormSchema = AdvancePaymentFormSchema.merge(
   AccomplishmentFormSchema
-);
+).merge(EngineerAtSiteFormSchema);
 
 export const meetingFormSchema = z.object({
   title: z.string().min(3).max(50),
