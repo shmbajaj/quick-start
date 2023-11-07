@@ -11,6 +11,14 @@ const navItems = [
     name: "Payments",
     to: "/payments",
   },
+  {
+    name: "Form",
+    to: "/form",
+  },
+  {
+    name: "Tasks",
+    to: "/tasks",
+  },
 ];
 
 export interface RootProps extends React.HTMLAttributes<HTMLDivElement> {}
