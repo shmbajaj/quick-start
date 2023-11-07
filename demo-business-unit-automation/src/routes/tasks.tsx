@@ -1,5 +1,5 @@
 import Search from "@/components/search";
-import TaskList from "@/components/task-list";
+import TaskList, { TaskListProps } from "@/components/task-list";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,7 +12,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CheckCircle, Circle, CircleEllipsis, Filter } from "lucide-react";
 
-const data = {
+const data: Record<"active" | "ongoing" | "done", TaskListProps> = {
   active: {
     title: "Active",
     icon: <Circle className="mt-px h-5 w-5" />,

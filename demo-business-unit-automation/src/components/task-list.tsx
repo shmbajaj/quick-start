@@ -14,15 +14,15 @@ import EngineerAtSiteForm from "./forms/site-report-form";
 
 export type DemoTaskListInput = z.infer<typeof DemoTaskListFormSchema>;
 
-export default function TaskList({
-  title,
-  icon,
-  data,
-}: {
-  title: "Active" | "Ongoing" | "Done";
+type TaskTitle = "Active" | "Ongoing" | "Done";
+
+export interface TaskListProps {
+  title: TaskTitle;
   icon: ReactNode;
   data: Array<{ title: string; description: string; status?: string }>;
-}) {
+}
+
+export default function TaskList({ title, icon, data }: TaskListProps) {
   const [open, setIsOpen] = useState(false);
   const form = useForm<DemoTaskListInput>({
     resolver: zodResolver(DemoTaskListFormSchema),
