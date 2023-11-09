@@ -1,4 +1,4 @@
-import {Meta, Links, Outlet, Scripts} from "@remix-run/react"
+import { Meta, Links, Outlet, Scripts, LiveReload } from "@remix-run/react";
 
 export default function App() {
   return (
@@ -12,6 +12,7 @@ export default function App() {
         <h1>Hello QS Remix Run</h1>
         <Outlet />
         <Scripts />
+        <LiveReload />
       </body>
     </html>
   );
