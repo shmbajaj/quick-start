@@ -5,6 +5,7 @@ import {
   Meta,
   Scripts,
   ScrollRestoration,
+  Outlet
 } from "@remix-run/react";
 import type { LinksFunction } from "@remix-run/node";
 import appStylesHref from "./app.css";
@@ -51,7 +52,7 @@ export default function App() {
             </ul>
           </nav>
         </div>
-
+        <Outlet />
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
